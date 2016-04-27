@@ -1,4 +1,4 @@
-PIANO CLASS
+/////////////////////PIANO CLASS
 
 import greenfoot.*;  
 import java.awt.Color;
@@ -51,7 +51,7 @@ public class Piano extends World
 
 
 
-ACTOR KEY
+///////////////////////////ACTOR KEY
 
 
 
