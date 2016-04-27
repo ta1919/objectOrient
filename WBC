@@ -1,3 +1,5 @@
+///////////////////Bloodstream
+
 import greenfoot.*;
 
 public class Bloodstream extends World
@@ -120,4 +122,218 @@ public class Bloodstream extends World
         Border border2 = new Border();
         addObject(border2, 770, 180);
     }
+}
+
+///////////////////////////////Virus
+
+import greenfoot.*;
+
+public class Virus extends Actor
+{
+    /**
+     * Float along, slowly rotating.
+     */
+    public void act() 
+    {
+        setLocation(getX()-8, getY());
+        turn(-1);
+        
+        if (getX() == 0) 
+        {
+            getWorld().removeObject(this);
+        }
+    }    
+}
+
+/////////////////White cell
+
+import greenfoot.*; 
+
+/**
+ * This is a white blood cell. This kind of cell has the job to catch bacteria and
+ * remove them from the blood.
+ */
+public class WhiteCell extends Actor
+{
+    /**
+     * Act: move up and down when cursor keys are pressed.
+     */
+    public void act() 
+    {
+        checkKeyPress();
+        checkCollision();
+    }
+    
+    /**
+     * Check whether a keyboard key has been pressed and react if it has.
+     */
+    private void checkKeyPress()
+    {
+        if (Greenfoot.isKeyDown("up")) 
+        {
+            setLocation(getX(), getY()-8);
+        }
+        
+        if (Greenfoot.isKeyDown("down")) 
+        {
+            setLocation(getX(), getY()+8);
+        }
+        
+        if (Greenfoot.isKeyDown("right")) 
+        {
+            setLocation(getX()+4, getY());
+        }
+        
+        if (Greenfoot.isKeyDown("left")) 
+        {
+            setLocation(getX()-4, getY());
+        }
+    }
+    
+    /**
+     * Check whether we are touching a bacterium or virus. Remove bacteria.
+     * Game over.
+     */
+    private void checkCollision()
+    {
+        if (isTouching(Bacteria.class)) 
+        {
+            Greenfoot.playSound("slurp.wav");
+            removeTouching(Bacteria.class);
+            Bloodstream bloodstream = (Bloodstream)getWorld();
+            bloodstream.addScore(20);
+        }
+
+        if (isTouching(Virus.class)) 
+        {
+            removeTouching(Virus.class);
+            Bloodstream bloodstream = (Bloodstream)getWorld();
+            bloodstream.addScore(-100);            
+        }
+    }
+}
+
+
+
+
+
+//////////////////////Bacteria
+
+import greenfoot.*;  
+
+/**
+ * Bacteria fload along in the bloodstream. They are bad. Best to destroy
+ * them if you can.
+ */
+public class Bacteria extends Actor
+{
+    private int speed;
+
+    /**
+     * Constructor: Initialise the speed to a somewhat random value.
+     */
+    public Bacteria()
+    {
+        speed = Greenfoot.getRandomNumber(5) + 1;
+    }
+    
+    /**
+     * Float along the bloodstream, slowly rotating.
+     */
+    public void act() 
+    {
+        setLocation(getX()-speed, getY());
+        turn(1);
+        
+        if (getX() == 0) 
+        {
+            Bloodstream bloodstream = (Bloodstream)getWorld();
+            bloodstream.addScore(-15);
+            bloodstream.removeObject(this);
+        }
+    }
+    
+}
+
+
+////////////////////////Lining
+
+import greenfoot.*;  
+
+/**
+ * The Lining are objects at the edge of the vein.
+ */
+public class Lining extends Actor
+{
+    /**
+     * Move the lining along at regular speed.
+     */
+    public void act() 
+    {
+        setLocation(getX()-1, getY());
+        
+        if (getX() == 0) 
+        {
+            getWorld().removeObject(this);
+        }
+    }    
+}
+
+
+
+
+//////////////////////////Red Cell
+
+import greenfoot.*;  
+
+/**
+ * Red blood cells float in the blood stream, carrying oxygen. They don't interact
+ * with the white blood cells - they just float past.
+ * 
+ */
+public class RedCell extends Actor
+{
+    private int speed;
+    
+    /**
+     * Contructor: Initialise the floating speed to a random value.
+     */
+    public RedCell()
+    {
+        speed = Greenfoot.getRandomNumber(2) + 1;
+        setRotation(Greenfoot.getRandomNumber(360));
+    }
+    
+    /**
+     * Float along, right to left. Disappear when reaching the left edge.
+     */
+    public void act() 
+    {
+        setLocation(getX()-speed, getY());
+        turn(1);
+        
+        if (getX() == 0) 
+        {
+            getWorld().removeObject(this);
+        }
+    }    
+}
+
+
+
+/////////////////////////Border
+
+import greenfoot.*;  
+
+/**
+ * A border of our world, to cover the left and right edges.
+ */
+public class Border extends Actor
+{
+    /**
+     * Act - nothing to do. This object does not do anything.
+     */
+    public void act() 
+    {
+    }    
 }
