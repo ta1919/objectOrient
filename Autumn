@@ -1,0 +1,132 @@
+import greenfoot.*;
+
+
+public class MyWorld extends World
+{
+   
+    public MyWorld()
+    {    
+        super(600, 400, 1);
+        setUp();
+    }
+    
+ 
+    private void setUp()
+    {
+        int i = 0;
+        while (i<18) {
+            int x = Greenfoot.getRandomNumber(getWidth());
+            int y = Greenfoot.getRandomNumber(getHeight());
+            addObject( new Leaf(), x, y );
+            i++;
+        }
+        
+        addObject(new Block(), 300, 200);
+    }
+}
+
+
+
+
+////////////////////////////////////
+
+
+
+import greenfoot.*;  
+import java.util.List;
+
+
+public class Block extends Actor
+{
+    private int delta = 2;
+    
+    public void act() 
+    {
+        move();
+        checkEdge();
+        checkLeaf();
+        checkMouseClick();
+    }
+    
+    private void move()
+    {
+        setLocation(getX()+delta, getY());
+    }
+    
+    private void checkEdge()
+    {
+        if (isAtEdge()) 
+        {
+            delta = -delta;
+        }
+    }
+    
+    private void checkMouseClick()
+    {
+        if (Greenfoot.mouseClicked(null)) 
+        {
+            World world = getWorld();
+            List<Leaf> leaves = world.getObjects(Leaf.class);
+
+            for (Leaf leaf : leaves)
+            {
+                leaf.changeImage();
+            }
+        }
+    }
+    
+    private void checkLeaf()
+    {
+        Leaf leaf = (Leaf) getOneIntersectingObject(Leaf.class);
+        
+        if (leaf != null) {
+            leaf.turn(9);
+        }
+    }
+}
+
+
+
+/////////////////////////////////////////////
+
+import greenfoot.*;
+
+public class Leaf extends Actor
+{
+    private int speed;
+    GreenfootImage img1 = new GreenfootImage("leaf-green.png");
+    GreenfootImage img2 = new GreenfootImage("leaf-brown.png");
+    
+    public Leaf()
+    {
+        setImage(img1);
+        speed = Greenfoot.getRandomNumber(3) + 1;      
+        setRotation(Greenfoot.getRandomNumber(360));
+    }
+    
+    public void act() 
+    {
+        if (isAtEdge()) 
+        {
+            turn(180);
+        }
+        
+        move(speed);
+        
+        if (Greenfoot.getRandomNumber(100) < 50) 
+        {
+            turn(Greenfoot.getRandomNumber(5) - 2);   
+        }
+    }
+   
+    public void changeImage()
+    {
+        if (getImage() == img1) 
+        {
+            setImage(img2);
+        }
+        else {
+            setImage(img1);
+        }
+    }
+}
